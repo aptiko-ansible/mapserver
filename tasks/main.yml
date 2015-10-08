@@ -1,0 +1,23 @@
+---
+- name: Install mapserver
+  apt: name=cgi-mapserver
+
+- name: Create group mapserver
+  group: name=mapserver system=yes
+
+- name: Create user mapserver
+  user: name=mapserver group=mapserver system=yes
+
+- name: Create mapserver log dir
+  file: state=directory name=/var/log/mapserver owner=mapserver group=mapserver
+
+- name: Install supervisor
+  apt: name=supervisor
+
+- name: Configure supervisor
+  template: src=supervisor.conf dest=/etc/supervisor/conf.d/mapserver.conf
+  notify:
+  - Restart supervisor
+
+- name: Ensure supervisor is running
+  service: name=supervisor state=started

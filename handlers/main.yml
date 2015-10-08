@@ -1,0 +1,6 @@
+---
+- name: Restart supervisor
+  service: name=supervisor state=restarted sleep=5
+
+- name: Restart mapserver
+  supervisorctl: state=restarted name=mapserver:*
