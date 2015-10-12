@@ -19,6 +19,21 @@ from map server. For example, with ``nginx``::
         include fastcgi_params;
       }
 
+With ``apache``::
+
+    RewriteEngine On
+
+    # If query string contains a map key, deny
+    RewriteCond %{QUERY_STRING} (^|&|;)map=
+    RewriteRule "^/mapserver" "-" [forbidden]
+
+    # Otherwise, add the appropriate map key and execute as CGI
+    RewriteRule ^/mapserver /mapserver?map=/etc/naturebank/naturebank.map [qsappend,passthrough,last]
+    <Location /mapserver>
+        ProxyPass "fcgi://localhost:8081/"
+    </Location>
+
+
 Meta
 ====
 
